@@ -1,0 +1,102 @@
+Life::
+Aug: 2ex;
+Remove: 1ex;
+RemAdd: 2.5x;
+:::
+
+Defense::
+Aug: 1ex;
+Remove: 2ex;
+RemAdd: 1.5ex;
+:::
+
+Attack::
+Aug: 1ex;
+Remove: 1ex;
+RemAdd: 1.5ex;
+
+:::
+Caster::
+Aug: 1ex;
+Remove: 1ex;
+RemAdd: 1ex;
+
+:::
+
+Fire::
+Aug: 1ex;
+Remove: 1ex;
+RemAdd: 1ex;
+
+:::
+
+Cold::
+Aug: 1ex;
+Remove: 1ex;
+RemAdd: 1.5ex;
+:::
+
+Lightning::
+Aug: 1ex;
+Remove: 1ex;
+RemAdd: 1.5ex;
+
+:::
+
+Phys::
+Aug: 1ex;
+Remove: 1ex;
+RemAdd: 1ex;
+Non: 50c;
+
+:::
+
+Chaos::
+Aug: 1ex;
+Remove: 1ex;
+RemAdd: 1ex;
+
+:::
+
+Crit::
+Aug: 1ex;
+Remove: 1ex;
+RemAdd: 1ex;
+
+:::
+
+Speed::
+Aug: 6ex;
+Remove: 1.5ex;
+RemAdd: 5ex;
+
+:::
+
+Influence::
+Aug: 2ex;
+Remove: 60c;
+RemAdd: 3ex;
+Non: 1.5ex;
+
+:::
+
+Reforge::
+KPref: 35c;
+KSuff: 35c;
+
+:::
+
+Fracture::
+Pref1/3: 2ex;
+Suff1/3: 50c;
+1/5: 50c;
+:::
+ChangeRes::
+ChangeRes: 25c;
+
+:::
+ChangeColour::
+Red:20c;
+Blue:20c;
+Green:20c;
+White:2ex;
