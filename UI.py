@@ -31,7 +31,7 @@ class Application(tk.Frame):
         self.create_crafts()
 
         self.textbox_manager = tk.Frame(self)
-        self.textbox_manager.grid(row=0, column=1, rowspan=2, padx=10, pady=10)
+        self.textbox_manager.grid(row=0, column=1, rowspan=2, padx=10, pady=10, columnspan=3)
 
         self.clipboard_image = None
         self.aug_text_label = None
@@ -50,7 +50,10 @@ class Application(tk.Frame):
         self.create_textboxes()
 
         self.generation_button = tk.Button(self, text="Generate Copy Pasta", command=self.generate_copy_pasta)
-        self.generation_button.grid(row=2, column=0, sticky="NW", padx=10, pady=10)
+        self.generation_button.grid(row=2, column=1, sticky="NE", padx=10, pady=10)
+
+        self.open_prices = tk.Button(self, text="€", command=self.open_prices, width=4)
+        self.open_prices.grid(row=2, column=2, sticky="NE", padx=10, pady=10)
 
     def create_crafts(self):
 
@@ -102,6 +105,27 @@ class Application(tk.Frame):
         self.master.clipboard_clear()
         self.master.clipboard_append(textbox.get("1.0", "end"))
 
+    def open_prices(self):
+        self.master.withdraw()
+        os.system("prices.txt")
+        self.master.deiconify()
+        Content.reload()
+
+        self.reforge.reforge.price_kpref = Content.reforge.price_kpref
+        self.reforge.reforge.price_ksuff = Content.reforge.price_ksuff
+
+        self.colour.colour.prices = Content.change_colour.prices
+
+        self.fracture.fracture.prices = Content.fracture.prices
+        for ui, content_craft in zip(self.commons, Content.commons):
+            ui.craft.price_non = content_craft.price_non
+            ui.craft.price_aug = content_craft.price_aug
+            ui.craft.price_remove = content_craft.price_remove
+            ui.craft.price_rem_add = content_craft.price_rem_add
+
+        self.resist.resist.price_resist = Content.resist.price_resist
+        self.generate_copy_pasta()
+
     def generate_copy_pasta(self):
         self._generate_augment_copy_pasta()
         self._generate_remove_copy_pasta()
@@ -117,7 +141,7 @@ class Application(tk.Frame):
         for craft_element in self.commons:
             if craft_element.craft.amount_aug > 0:
                 at_least_1_craft = True
-                insert = Content.basic_price_format.format(mod_name=config.mod_copy_pasta_replacement[craft_element.craft.mod_name],
+                insert = Content.aug_price_format.format(mod_name=config.mod_copy_pasta_replacement[craft_element.craft.mod_name],
                                                            amount=craft_element.craft.amount_aug,
                                                            distance=" " * (config.price_amount_distance - len(craft_element.craft.price_aug)),
                                                            price=craft_element.craft.price_aug)
@@ -135,7 +159,7 @@ class Application(tk.Frame):
         for craft_element in self.commons:
             if craft_element.craft.amount_remove > 0:
                 at_least_1_craft = True
-                insert = Content.basic_price_format.format(mod_name=config.mod_copy_pasta_replacement[craft_element.craft.mod_name],
+                insert = Content.remove_price_format.format(mod_name=config.mod_copy_pasta_replacement[craft_element.craft.mod_name],
                                                            amount=craft_element.craft.amount_remove,
                                                            distance=" " * (config.price_amount_distance - len(craft_element.craft.price_remove)),
                                                            price=craft_element.craft.price_remove)
@@ -152,7 +176,7 @@ class Application(tk.Frame):
         for craft_element in self.commons:
             if craft_element.craft.amount_rem_add > 0:
                 at_least_1_craft = True
-                insert = Content.basic_price_format.format(mod_name=config.mod_copy_pasta_replacement[craft_element.craft.mod_name],
+                insert = Content.rem_add_price_format.format(mod_name=config.mod_copy_pasta_replacement[craft_element.craft.mod_name],
                                                            amount=craft_element.craft.amount_rem_add,
                                                            price=craft_element.craft.price_rem_add,
                                                            distance=" " * (config.price_amount_distance - len(craft_element.craft.price_rem_add))

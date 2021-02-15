@@ -1,19 +1,19 @@
 Life::
-Aug: 2ex;
+Aug: 1.5ex;
 Remove: 1ex;
 RemAdd: 2.5x;
 :::
 
 Defense::
 Aug: 1ex;
-Remove: 2ex;
+Remove: 1.5ex;
 RemAdd: 1.5ex;
 :::
 
 Attack::
-Aug: 1ex;
-Remove: 1ex;
-RemAdd: 1.5ex;
+Aug: 60c;
+Remove: 60c;
+RemAdd: 60c;
 
 :::
 Caster::
@@ -31,7 +31,7 @@ RemAdd: 1ex;
 :::
 
 Cold::
-Aug: 1ex;
+Aug: 1.5ex;
 Remove: 1ex;
 RemAdd: 1.5ex;
 :::
@@ -44,7 +44,7 @@ RemAdd: 1.5ex;
 :::
 
 Phys::
-Aug: 1ex;
+Aug: 1.5x;
 Remove: 1ex;
 RemAdd: 1ex;
 Non: 50c;
@@ -52,16 +52,16 @@ Non: 50c;
 :::
 
 Chaos::
-Aug: 1ex;
-Remove: 1ex;
+Aug: 2ex;
+Remove: 70c;
 RemAdd: 1ex;
 
 :::
 
 Crit::
-Aug: 1ex;
+Aug: 1.5ex;
 Remove: 1ex;
-RemAdd: 1ex;
+RemAdd: 2ex;
 
 :::
 
@@ -80,6 +80,13 @@ Non: 1.5ex;
 
 :::
 
+Random::
+Aug: 40c;
+Remove: x;
+RemAdd:x
+
+:::
+
 Reforge::
 KPref: 35c;
 KSuff: 35c;
@@ -88,7 +95,7 @@ KSuff: 35c;
 
 Fracture::
 Pref1/3: 2ex;
-Suff1/3: 50c;
+Suff1/3: 30c;
 1/5: 50c;
 :::
 ChangeRes::

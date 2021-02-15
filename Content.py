@@ -8,7 +8,7 @@ import numpy as np
 
 # Mod List
 
-common_mods = "life defense fire cold lightning phys chaos attack caster crit speed influence".split(" ")
+common_mods = "life defense fire cold lightning phys chaos attack caster crit speed influence random".split(" ")
 
 resists = "fire cold lightning".split(" ")
 
@@ -23,7 +23,11 @@ basic_format = "```CSS\n" \
                "{method}\n" \
                "```"
 
+
 basic_price_format = "[{price}]{distance}({amount}x) {mod_name}"
+aug_price_format = "[{price}]{distance}({amount}x) Aug / Augment {mod_name}"
+remove_price_format = "[{price}]{distance}({amount}x) Rem / Remove {mod_name}"
+rem_add_price_format = "[{price}]{distance}({amount}x) Rem/Add {mod_name}"
 non_price_format = "[{price}]{distance}({amount}x) Remove Non-{mod_name}, Add {mod_name}"
 resist_price_format = "{from_} to {to} ({amount}x)"
 

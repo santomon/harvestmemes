@@ -24,8 +24,8 @@ app_title = "Shitty TFT Copy Pasta \"Tool\""
 
 mod_copy_pasta_replacement = {
     "life": "Life",
-    "defense": "Def",
-    "attack": "Attack",
+    "defense": "Def / Defense / Defence",
+    "attack": "Attack / Atk",
     "caster": "Caster",
 
     "fire": "Fire",
@@ -36,10 +36,11 @@ mod_copy_pasta_replacement = {
 
     "crit": "Crit",
     "speed": "Speed",
-    "influence": "Influence",
+    "influence": "Influence / Infl",
+    "random": "Random (Leo Slam)",
 
-    "kpref": "Reforge, Keep Pref / Prefix / Prefixes",
-    "ksuff": "Reforge, Keep Suff / Suffix / Suffixes",
+    "kpref": "Reforge, Keep Pref / Prefix",
+    "ksuff": "Reforge, Keep Suff / Suffix",
     "pref1/3": "Fracture Prefix 1/3",
     "suff1/3": "Fracture Suffix 1/3",
     "1/5": "Fracture 1/5",
