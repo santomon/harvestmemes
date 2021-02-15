@@ -263,7 +263,6 @@ class Application(tk.Frame):
             text = text.format(change_res_text).format("\n{}")
         if at_least_1_colour:
             text = text.format(change_colour_text)
-        print(text)
         self.other_textbox.delete("1.0", "end")
         self.other_textbox.insert("1.0", text.format("") if at_least_1_craft else "")
 
@@ -351,7 +350,6 @@ class CommonCraftElement(tk.Frame):
 
 
     def update(self):
-        print("update called")
         self.aug_button.config(text=self.craft.amount_aug)
         if self.craft.amount_aug > 0:
             self.aug_button.config(bg="green")
@@ -380,7 +378,6 @@ class CommonCraftElement(tk.Frame):
 class ReforgeElement(tk.Frame):
 
     def __init__(self, master=None, reforge: Content.Reforge=None):
-        print("reforge init called")
         super().__init__(master)
         self.reforge: Content.reforge = reforge
 

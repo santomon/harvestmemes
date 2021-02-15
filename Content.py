@@ -228,8 +228,6 @@ def parse_prices():
     raw_dict = dict()
     for mod in raw:
         raw_dict.update(parse_mod_prices_into_dict(mod))
-
-    print(raw_dict)
     return raw_dict
 
 
@@ -250,7 +248,6 @@ def parse_mod_prices_into_dict(mod_prices):
         return {mod_prices[0]: {method.split(":")[0]: method.split(":")[1] for method in mod_prices[1].split(";") if
                                 len(method) > 0}}
     else:
-        print(mod_prices)
         return {}
 
 def reload():
