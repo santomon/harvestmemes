@@ -1,4 +1,5 @@
 from abc import ABC
+from pathlib import Path
 import typing as t
 import config
 
@@ -18,18 +19,15 @@ fractures = "pref1/3 suff1/3 1/5".split(" ")
 
 reforge_methods = "kpref ksuff".split(" ")
 
-basic_format = "```CSS\n" \
-               "WTS softcore \n\n" \
-               "{method}\n" \
-               "```"
+basic_format = Path(config.basic_format_path).read_text()
 
+basic_price_format = "{amount}x{distance} [{mod_name}][-] <price: {price}>"
+aug_price_format = "{amount}x{distance} [Aug / Augment {mod_name}][-] <price: {price}>"
+remove_price_format = "{amount}x{distance} [Rem / Remove {mod_name}][-] <price: {price}>"
+rem_add_price_format = "{amount}x{distance} [Rem/Add {mod_name}][-] <price: {price}>"
+non_price_format = "{amount}x{distance} [Remove Non-{mod_name}, Add {mod_name}][-] <price: {price}>"
 
-basic_price_format = "[{price}]{distance}({amount}x) {mod_name}"
-aug_price_format = "[{price}]{distance}({amount}x) Aug / Augment {mod_name}"
-remove_price_format = "[{price}]{distance}({amount}x) Rem / Remove {mod_name}"
-rem_add_price_format = "[{price}]{distance}({amount}x) Rem/Add {mod_name}"
-non_price_format = "[{price}]{distance}({amount}x) Remove Non-{mod_name}, Add {mod_name}"
-resist_price_format = "{from_} to {to} ({amount}x)"
+resist_price_format = " {amount}x {from_} to {to}"
 
 class Mod(ABC):
 
@@ -258,6 +256,10 @@ def reload():
     resist = Resist(prices["changeres"] if "changeres" in prices.keys() else None)
     fracture = Fracture(prices["fracture"] if "fracture" in prices.keys() else None)
     change_colour = Colour(prices["changecolour"] if "changecolour" in prices.keys() else None)
+
+def reload_basic_format():
+    global basic_format
+    basic_format = Path(config.basic_format_path).read_text()
 
 prices = parse_prices()
 commons: t.List[Common] = [Common(mod, prices[mod] if mod in prices.keys() else None) for mod in common_mods]

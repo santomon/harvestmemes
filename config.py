@@ -1,6 +1,9 @@
 import os
 
 prices_path = "prices.txt"
+basic_format_path = "basic_format.txt"
+
+
 clipboard_image_path = os.path.join("assets", "clipboard.png")
 annul_image_path = os.path.join("assets", "annul.png")
 ex_image_path = os.path.join("assets", "ex.png")
@@ -14,6 +17,28 @@ colour_image_path = {
     "green": os.path.join("assets", "green.png"),
     "white": os.path.join("assets", "white.png")
 }
+
+
+common_image_root_dir = "assets"
+common_image_names = {
+    "life": "life.png",
+    "defense": "es.png",
+    "attack": "empty.png",
+    "caster": "empty.png",
+
+    "fire": "diy_flame.png",
+    "cold": "snowflake.png",
+    "lightning": "lightning_bolt.png",
+    "phys": "empty.png",
+    "chaos": "chaos.png",
+
+    "crit": "ie.png",
+    "speed": "speed.png",
+    "influence": "shaper.png",
+    "random": "dice.png",
+}
+
+common_group_lines = [1, 6, 8, 10, 11]
 
 resist_transform_image_path = os.path.join("assets", "arrow_curved.png")
 fire_image_path = os.path.join("assets", "diy_flame.png")
@@ -51,11 +76,10 @@ mod_copy_pasta_replacement = {
     "blue": "Non-Blue to Blue",
     "green": "Non-Green to Green",
     "white": "Non-White to White"
-
 }
 
 aug_method_text = "Aug / Augment : \n{}"
 remove_method_text = "Rem / Remove : \n{}"
 rem_add_method_text = "Rem / Remove + Add : \n{}"
 
-price_amount_distance = 8
+price_amount_distance = 4

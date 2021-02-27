@@ -9,6 +9,8 @@ import numpy as np
 import Content
 import config
 
+from tkinter.ttk import Separator
+
 
 class Application(tk.Frame):
 
@@ -17,6 +19,7 @@ class Application(tk.Frame):
         self.master = master
         self.pack()
         self.commons: t.Union[t.List[CommonCraftElement], None] = None
+        self.common_separators = None
         self.reforge = None
         self.resist = None
         self.fracture = None
@@ -26,12 +29,12 @@ class Application(tk.Frame):
         self.common_manager.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
 
         self.other_manager = tk.Frame(self, highlightbackground="black", highlightthickness=1)
-        self.other_manager.grid(row=1, column=0, padx=10, sticky="new")
+        self.other_manager.grid(row=1, column=0, padx=10, sticky="nsew")
 
         self.create_crafts()
 
         self.textbox_manager = tk.Frame(self)
-        self.textbox_manager.grid(row=0, column=1, rowspan=2, padx=10, pady=10, columnspan=3)
+        self.textbox_manager.grid(row=0, column=1, rowspan=2, padx=10, pady=10, columnspan=4, sticky="NSEW")
 
         self.clipboard_image = None
         self.aug_text_label = None
@@ -49,20 +52,39 @@ class Application(tk.Frame):
 
         self.create_textboxes()
 
-        self.generation_button = tk.Button(self, text="Generate Copy Pasta", command=self.generate_copy_pasta)
-        self.generation_button.grid(row=2, column=1, sticky="NE", padx=10, pady=10)
+        self.generation_button = tk.Button(self, text="Generate", command=self.generate_copy_pasta, bg="cyan")
+        self.generation_button.grid(row=2, column=3, sticky="NSEW", padx=10, pady=10)
 
-        self.open_prices = tk.Button(self, text="€", command=self.open_prices, width=4)
-        self.open_prices.grid(row=2, column=2, sticky="NE", padx=10, pady=10)
+        self.open_prices = tk.Button(self, text="€", font="Helvetica 9 bold", command=self.open_prices, width=4)
+        self.open_prices.grid(row=2, column=2, sticky="NSEW", padx=10, pady=10)
+
+        self.open_basic_format = tk.Button(self, text="Format", command=self.open_basic_format, width=4)
+        self.open_basic_format.grid(row=2, column=1, sticky="NSEW", padx=10, pady=10)
 
     def create_crafts(self):
 
-        self.commons = [CommonCraftElement(self.common_manager, mod) for mod in Content.commons]
+        self.create_commons()
 
         self.reforge: ReforgeElement = ReforgeElement(self.other_manager, Content.reforge)
         self.fracture: FractureElement = FractureElement(self.other_manager, Content.fracture)
+
+        Separator(self.other_manager, orient="horizontal").pack(expand=True, fill="x")
+
+
+
         self.resist: ResistElement = ResistElement(self.other_manager, Content.resist)
         self.colour: ColourElement = ColourElement(self.other_manager, Content.change_colour)
+
+    def create_commons(self):
+        self.commons = []
+        self.common_separators = []
+        for i, mod in enumerate(Content.commons):
+            self.commons.append(CommonCraftElement(self.common_manager, mod))
+
+            if i in config.common_group_lines:
+                tmp = Separator(self.common_manager, orient="horizontal")
+                tmp.pack(side="top", fill="x", expand=True)
+                self.common_separators.append(tmp)
 
     def create_textboxes(self):
 
@@ -94,7 +116,7 @@ class Application(tk.Frame):
         self.other_text_label = tk.Label(self.textbox_manager, text="Other Copy Pasta:")
         self.other_text_label.grid(row=6, column=0)
         self.other_textbox = tk.Text(self.textbox_manager,  width=40, height=9)
-        self.other_textbox.grid(row=7, column=0)
+        self.other_textbox.grid(row=7, column=0, sticky="NSEW")
         self.other_clipboard_button = tk.Button(self.textbox_manager, image=self.clipboard_image, command=lambda: self.copy_to_clipboard(self.other_textbox))
         self.other_clipboard_button.grid(row=7, column=1, padx=4, sticky="nw")
 
@@ -107,7 +129,7 @@ class Application(tk.Frame):
 
     def open_prices(self):
         self.master.withdraw()
-        os.system("prices.txt")
+        os.system(config.prices_path)
         self.master.deiconify()
         Content.reload()
 
@@ -126,6 +148,14 @@ class Application(tk.Frame):
         self.resist.resist.price_resist = Content.resist.price_resist
         self.generate_copy_pasta()
 
+    def open_basic_format(self):
+        self.master.withdraw()
+        os.system(config.basic_format_path)
+        self.master.deiconify()
+        Content.reload_basic_format()
+        self.generate_copy_pasta()
+
+
     def generate_copy_pasta(self):
         self._generate_augment_copy_pasta()
         self._generate_remove_copy_pasta()
@@ -143,7 +173,7 @@ class Application(tk.Frame):
                 at_least_1_craft = True
                 insert = Content.aug_price_format.format(mod_name=config.mod_copy_pasta_replacement[craft_element.craft.mod_name],
                                                            amount=craft_element.craft.amount_aug,
-                                                           distance=" " * (config.price_amount_distance - len(craft_element.craft.price_aug)),
+                                                           distance=" " * (config.price_amount_distance),
                                                            price=craft_element.craft.price_aug)
                 text= text.format(insert + "\n{}")
 
@@ -161,7 +191,7 @@ class Application(tk.Frame):
                 at_least_1_craft = True
                 insert = Content.remove_price_format.format(mod_name=config.mod_copy_pasta_replacement[craft_element.craft.mod_name],
                                                            amount=craft_element.craft.amount_remove,
-                                                           distance=" " * (config.price_amount_distance - len(craft_element.craft.price_remove)),
+                                                           distance=" " * (config.price_amount_distance),
                                                            price=craft_element.craft.price_remove)
                 text = text.format(insert + "\n{}")
 
@@ -179,7 +209,7 @@ class Application(tk.Frame):
                 insert = Content.rem_add_price_format.format(mod_name=config.mod_copy_pasta_replacement[craft_element.craft.mod_name],
                                                            amount=craft_element.craft.amount_rem_add,
                                                            price=craft_element.craft.price_rem_add,
-                                                           distance=" " * (config.price_amount_distance - len(craft_element.craft.price_rem_add))
+                                                           distance=" " * (config.price_amount_distance)
                                                            )
                 text = text.format(insert + "\n{}")
 
@@ -198,7 +228,7 @@ class Application(tk.Frame):
                 at_least_1_craft = True
                 insert = Content.non_price_format.format(mod_name=config.mod_copy_pasta_replacement[craft_element.craft.mod_name],
                                                            amount=craft_element.craft.amount_non,
-                                                           distance=" " * (config.price_amount_distance - len(craft_element.craft.price_non)),
+                                                           distance=" " * (config.price_amount_distance),
                                                            price=craft_element.craft.price_non)
                 text = text.format(insert + "\n{}")
 
@@ -209,7 +239,7 @@ class Application(tk.Frame):
             insert = Content.basic_price_format.format(mod_name=config.mod_copy_pasta_replacement["kpref"],
                                                        amount=self.reforge.reforge.amount_kpref,
                                                        price=self.reforge.reforge.price_kpref,
-                                                       distance=" " * (config.price_amount_distance - len(self.reforge.reforge.price_kpref)))
+                                                       distance=" " * config.price_amount_distance)
             text = text.format(insert + "\n{}")
 
         if self.reforge.reforge.amount_ksuff > 0:
@@ -217,7 +247,7 @@ class Application(tk.Frame):
             insert = Content.basic_price_format.format(mod_name=config.mod_copy_pasta_replacement["ksuff"],
                                                        amount=self.reforge.reforge.amount_ksuff,
                                                        price=self.reforge.reforge.price_ksuff,
-                                                       distance=" " * (config.price_amount_distance - len(self.reforge.reforge.price_ksuff)))
+                                                       distance=" " * (config.price_amount_distance))
             text = text.format(insert + "\n{}")
 
         if at_least_1_craft:
@@ -229,13 +259,13 @@ class Application(tk.Frame):
                 insert = Content.basic_price_format.format(mod_name=config.mod_copy_pasta_replacement[method],
                                                        amount=self.fracture.fracture.amount[method],
                                                        price=self.fracture.fracture.prices[method],
-                                                       distance=" " * (config.price_amount_distance - len(self.fracture.fracture.prices[method])))
+                                                       distance=" " * (config.price_amount_distance))
                 text = text.format(insert + "\n{}")
 
         if at_least_1_craft:
             text = text.format("\n{}")
 
-        change_res_text = "Change Resist [{price}]:".format(price=self.resist.resist.price_resist) + "\n{}"
+        change_res_text = "Change Resist <price: {price}>:".format(price=self.resist.resist.price_resist) + "\n{}"
         at_least_1_res = False
         for from_ in ['fire', 'cold', 'lightning']:
             for to in ['fire', 'cold', 'lightning']:
@@ -256,13 +286,15 @@ class Application(tk.Frame):
                 insert = Content.basic_price_format.format(mod_name=config.mod_copy_pasta_replacement[colour_],
                                                        amount=self.colour.colour.amount[colour_],
                                                        price=self.colour.colour.prices[colour_],
-                                                       distance=" " * (config.price_amount_distance - len(self.colour.colour.prices[colour_])))
+                                                       distance=" " * (config.price_amount_distance))
                 change_colour_text = change_colour_text.format(insert + "\n{}")
 
         if at_least_1_res:
             text = text.format(change_res_text).format("\n{}")
         if at_least_1_colour:
             text = text.format(change_colour_text)
+
+        text = text.replace("\n\n\n", "\n")
         self.other_textbox.delete("1.0", "end")
         self.other_textbox.insert("1.0", text.format("") if at_least_1_craft else "")
 
@@ -275,6 +307,8 @@ class CommonCraftElement(tk.Frame):
 
         self.text = "Default Text"
 
+        self.label_image = None
+        self.label_image_label = None
         self.aug_image = None
         self.remove_image = None
         self.rem_add_image = None
@@ -285,7 +319,7 @@ class CommonCraftElement(tk.Frame):
         self.rem_add_button = None
         self.non_button = None
 
-        self.pack()
+        self.pack(side="top")
         self.craft: Content.Common = craft
         self.create_craft_UI()
 
@@ -295,14 +329,20 @@ class CommonCraftElement(tk.Frame):
     def create_craft_UI(self):
 
         if self.craft is not None:
-            self.text = tk.Label(self, text=self.craft.mod_name.capitalize(), width=10, compound="left")
+            tmp_image = Image.open(os.path.join(config.common_image_root_dir, config.common_image_names[self.craft.mod_name]))
+            tmp_image.thumbnail((20, 20), Image.ANTIALIAS)
+            self.label_image = ImageTk.PhotoImage(tmp_image)
+            self.label_image_label = tk.Label(self, image=self.label_image, width=20, height=20, compound="left")
+            self.label_image_label.grid(row=0, column=1)
+
+            self.text = tk.Label(self, text=self.craft.mod_name.capitalize(), width=8, compound="left")
             self.text.grid(row=0, column=0)
 
             aug_image = Image.open(config.ex_image_path)
             aug_image.thumbnail((20, 20), Image.ANTIALIAS)
             self.aug_image = ImageTk.PhotoImage(aug_image)
             self.aug_button = tk.Button(self, text=self.craft.amount_aug, image=self.aug_image, height=20, width=30, compound="left")
-            self.aug_button.grid(row=0, column=1)
+            self.aug_button.grid(row=0, column=2)
             self.aug_button.bind("<Button-1>", lambda event: self.increment("aug"))
             self.aug_button.bind("<Button-3>", lambda event: self.decrement("aug"))
             self.aug_button.bind("<Shift-Button-1>", lambda event: self.set_amount_to_zero("aug"))
@@ -311,7 +351,7 @@ class CommonCraftElement(tk.Frame):
             remove_image.thumbnail((20, 20), Image.ANTIALIAS)
             self.remove_image = ImageTk.PhotoImage(remove_image)
             self.remove_button = tk.Button(self, text=self.craft.amount_remove, image=self.remove_image, height=20, width=30, compound="left")
-            self.remove_button.grid(row=0, column=2)
+            self.remove_button.grid(row=0, column=3)
             self.remove_button.bind("<Button-1>", lambda event: self.increment("remove"))
             self.remove_button.bind("<Button-3>", lambda event: self.decrement("remove"))
             self.remove_button.bind("<Shift-Button-1>", lambda event: self.set_amount_to_zero("remove"))
@@ -320,7 +360,7 @@ class CommonCraftElement(tk.Frame):
             rem_add_image.thumbnail((20, 20), Image.ANTIALIAS)
             self.rem_add_image = ImageTk.PhotoImage(rem_add_image)
             self.rem_add_button = tk.Button(self, text=self.craft.amount_rem_add, image=self.rem_add_image, height=20, width=30, compound="left")
-            self.rem_add_button.grid(row=0, column=3)
+            self.rem_add_button.grid(row=0, column=4)
             self.rem_add_button.bind("<Button-1>", lambda event: self.increment("remadd"))
             self.rem_add_button.bind("<Button-3>", lambda event: self.decrement("remadd"))
             self.rem_add_button.bind("<Shift-Button-1>", lambda event: self.set_amount_to_zero("remadd"))
@@ -329,7 +369,7 @@ class CommonCraftElement(tk.Frame):
             non_image.thumbnail((20, 20), Image.ANTIALIAS)
             self.non_image = ImageTk.PhotoImage(non_image)
             self.non_button = tk.Button(self, text=self.craft.amount_non, image=self.non_image, height=20, width=30, compound="left")
-            self.non_button.grid(row=0, column=4)
+            self.non_button.grid(row=0, column=5)
             self.non_button.bind("<Button-1>", lambda event: self.increment("non"))
             self.non_button.bind("<Button-3>", lambda event: self.decrement("non"))
             self.non_button.bind("<Shift-Button-1>", lambda event: self.set_amount_to_zero("non"))
@@ -392,11 +432,11 @@ class ReforgeElement(tk.Frame):
         self.ksuff_button.bind("<Button-3>", lambda event: self.decrement("ksuff"))
         self.ksuff_button.bind("<Shift-Button-1>", lambda event: self.set_amount_to_zero("ksuff"))
 
-        self.label.grid(row=0, column=0, sticky="NSEW")
-        self.kpref_button.grid(row=0, column=1, sticky="NSEW")
-        self.ksuff_button.grid(row=0, column=2, sticky="NSEW")
+        self.label.pack(side="left", fill="both")
+        self.kpref_button.pack(side="left", fill="both", expand=True)
+        self.ksuff_button.pack(side="left", fill="both", expand=True)
 
-        self.pack(expand=True, fill="x")
+        self.pack(expand=True, fill="both")
 
     def increment(self, method):
         self.reforge.increment(method)
@@ -530,7 +570,7 @@ class FractureElement(tk.Frame):
 
     def __init__(self, master=None, fracture: Content.Fracture=None):
 
-        super().__init__(master)
+        super().__init__(master, bg="purple")
         self.master = master
         self.fracture = fracture
 
@@ -541,20 +581,21 @@ class FractureElement(tk.Frame):
         }
 
         self.buttons = dict()
-        self.buttons["pref1/3"] = self.create_button(method="pref1/3", grid_column=1)
-        self.buttons["suff1/3"] = self.create_button(method="suff1/3", grid_column=2)
-        self.buttons["1/5"] = self.create_button(method="1/5", grid_column=3)
+        self.label = tk.Label(self, text="Fracture", width=10)
+        self.label.pack(side="left", fill="both")
 
-        self.label = tk.Label(self, text="Fracture")
-        self.label.grid(row=0, column=0)
-        self.pack()
+        self.buttons["pref1/3"] = self.create_button(method="pref1/3")
+        self.buttons["suff1/3"] = self.create_button(method="suff1/3")
+        self.buttons["1/5"] = self.create_button(method="1/5")
 
-    def create_button(self, method, grid_column: int):
+        self.pack(expand=True, fill="both")
+
+    def create_button(self, method):
         button = tk.Button(self, text=self.button_replacements[method] + ": " + str(self.fracture.amount[method]))
         button.bind("<Button-1>", lambda event: self.increment(method))
         button.bind("<Button-3>", lambda event: self.decrement(method))
         button.bind("<Shift-Button-1>", lambda event: self.set_amount_to_zero(method))
-        button.grid(row=0, column=grid_column, sticky="NSEW")
+        button.pack(side="left", expand=True, fill="both")
         return button
 
     def increment(self, method):
@@ -587,13 +628,13 @@ class ColourElement(tk.Frame):
 
         self.colour_images = dict()
         self.buttons = dict()
-        self.buttons["red"] = self.create_button("red", grid_row=0)
-        self.buttons["blue"] = self.create_button("blue", grid_row=1)
-        self.buttons["green"] = self.create_button("green", grid_row=2)
-        self.buttons["white"] = self.create_button("white", grid_row=3)
-        self.pack(expand=True, pady=(10, 0))
+        self.buttons["red"] = self.create_button("red")
+        self.buttons["blue"] = self.create_button("blue")
+        self.buttons["green"] = self.create_button("green")
+        self.buttons["white"] = self.create_button("white")
+        self.pack(expand=True, pady=(10, 0), fill="both")
 
-    def create_button(self, method, grid_row: int):
+    def create_button(self, method):
         tmp = Image.open(config.colour_image_path[method])
         tmp.thumbnail((40, 20), Image.ANTIALIAS)
         self.colour_images[method] = ImageTk.PhotoImage(tmp)
@@ -602,7 +643,7 @@ class ColourElement(tk.Frame):
         button.bind("<Button-1>", lambda event: self.increment(method))
         button.bind("<Button-3>", lambda event: self.decrement(method))
         button.bind("<Shift-Button-1>", lambda event: self.set_amount_to_zero(method))
-        button.grid(row=grid_row, column=0, sticky="NSEW")
+        button.pack(fill="both")
         return button
 
     def increment(self, method):

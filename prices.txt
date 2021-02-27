@@ -17,8 +17,8 @@ RemAdd: 60c;
 
 :::
 Caster::
-Aug: 1ex;
-Remove: 1ex;
+Aug: 70c;
+Remove: 70c;
 RemAdd: 1ex;
 
 :::
@@ -38,7 +38,7 @@ RemAdd: 1.5ex;
 
 Lightning::
 Aug: 1ex;
-Remove: 1ex;
+Remove: 80c;
 RemAdd: 1.5ex;
 
 :::
